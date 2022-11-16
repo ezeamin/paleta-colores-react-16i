@@ -1,9 +1,17 @@
-import React from 'react'
+import React from 'react';
+import { Row } from 'react-bootstrap';
+import ColorCard from '../ColorCard/ColorCard';
 
-const ColorList = () => {
+const ColorList = (props) => {
+  const { colors, changeColorList } = props;
+
   return (
-    <div>ColorList</div>
-  )
-}
+    <Row className='my-5'>
+      {colors.map((color) => {
+        return <ColorCard key={color.id} color={color} />;
+      })}
+    </Row>
+  );
+};
 
-export default ColorList
+export default ColorList;
