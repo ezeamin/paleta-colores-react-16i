@@ -5,6 +5,7 @@ import FormColor from './components/FormColor/FormColor';
 
 const App = () => {
   const [colors, setColors] = useState([]);
+  const [updateId, setUpdateId] = useState(null);
 
   const changeColorList = (newList) => {
     setColors(newList);
@@ -22,9 +23,18 @@ const App = () => {
 
   return (
     <div className='App py-5'>
-      <FormColor changeColorList={changeColorList} colors={colors} />
+      <FormColor
+        changeColorList={changeColorList}
+        colors={colors}
+        updateId={updateId}
+        setUpdateId={setUpdateId}
+      />
       <Container>
-        <ColorList changeColorList={changeColorList} colors={colors} />
+        <ColorList
+          changeColorList={changeColorList}
+          colors={colors}
+          setUpdateId={setUpdateId}
+        />
       </Container>
     </div>
   );

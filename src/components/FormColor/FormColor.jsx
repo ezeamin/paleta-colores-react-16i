@@ -1,13 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 
 import './formColor.css';
 
 const FormColor = (props) => {
-  const { colors, changeColorList } = props;
+  const { colors, changeColorList, updateId, setUpdateId } = props;
 
   const { register, handleSubmit } = useForm();
+
+  const [colorToShow, setColorToShow] = useState('#000');
+
+  useEffect(() => {
+    if (updateId) {
+      const color = colors.find((element) => {
+        return element.id === updateId;
+      });
+
+      setColorToShow(color.color);
+    }
+  }, [updateId, colors]);
 
   const customHandleSubmit = (data) => {
     console.log(data);
@@ -20,21 +32,46 @@ const FormColor = (props) => {
         ]
     */
 
-    const newColor = {
-      id: Math.round(Math.random() * 30000),
-      color: data.color,
-    };
+    let newList;
 
-    changeColorList([...colors, newColor]);
+    if (updateId) {
+      // update color
+      newList = colors.map((element) => {
+        if (element.id === updateId) {
+          return {
+            ...element,
+            color: data.color,
+          };
+        }
+
+        return element;
+      });
+
+      setUpdateId(null);
+    } else {
+      // agregar color
+      const newColor = {
+        id: Math.round(Math.random() * 30000) + 1,
+        color: data.color,
+      };
+
+      newList = [...colors, newColor];
+    }
+
+    changeColorList(newList);
   };
 
   return (
     <Card className='formCard'>
       <Card.Body>
-        <Card.Title className='text-dark'>Añadir color</Card.Title>
+        <Card.Title className='text-dark'>
+          {updateId ? 'Editar color' : 'Añadir color'}
+        </Card.Title>
         <Form onSubmit={handleSubmit(customHandleSubmit)}>
           <Form.Control
-            {...register('color')}
+            {...register('color',{
+              value: colorToShow
+            })}
             type='color'
             className='w-100 my-3'
             id='colorPicker'
