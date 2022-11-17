@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
-import { useForm } from 'react-hook-form';
 
 import './formColor.css';
 
 const FormColor = (props) => {
   const { colors, changeColorList, updateId, setUpdateId } = props;
 
-  const { register, handleSubmit } = useForm();
-
-  const [colorToShow, setColorToShow] = useState('#000');
+  const [colorToShow, setColorToShow] = useState('#000000');
 
   useEffect(() => {
     if (updateId) {
@@ -21,8 +18,12 @@ const FormColor = (props) => {
     }
   }, [updateId, colors]);
 
-  const customHandleSubmit = (data) => {
-    console.log(data);
+  const handleChange = (e) => {
+    setColorToShow(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
     /* [
         {
@@ -40,7 +41,7 @@ const FormColor = (props) => {
         if (element.id === updateId) {
           return {
             ...element,
-            color: data.color,
+            color: colorToShow,
           };
         }
 
@@ -48,11 +49,12 @@ const FormColor = (props) => {
       });
 
       setUpdateId(null);
+      setColorToShow('#000000');
     } else {
       // agregar color
       const newColor = {
         id: Math.round(Math.random() * 30000) + 1,
-        color: data.color,
+        color: colorToShow,
       };
 
       newList = [...colors, newColor];
@@ -67,11 +69,10 @@ const FormColor = (props) => {
         <Card.Title className='text-dark'>
           {updateId ? 'Editar color' : 'Añadir color'}
         </Card.Title>
-        <Form onSubmit={handleSubmit(customHandleSubmit)}>
+        <Form onSubmit={handleSubmit}>
           <Form.Control
-            {...register('color',{
-              value: colorToShow
-            })}
+            value={colorToShow}
+            onChange={handleChange}
             type='color'
             className='w-100 my-3'
             id='colorPicker'
